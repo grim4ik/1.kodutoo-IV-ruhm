@@ -69,11 +69,27 @@
 	<h1>Loo kasutaja</h1>
 	
 	<form method="POST" >
-		<input name="singupEmail" placeholder="E-post" type="email">  <?php echo $singupEmailError; ?>
+		<input name="singupName" placeholder="Login" type="name">  <?php echo $singupEmailError; ?>
 		
 		<br><br>
 		
 		<input name="singupPassword" placeholder="Parool" type="password">  <?php echo $singupPasswordError; ?>
+		
+		<br><br>
+		
+		<input name="singupPassword" placeholder="Parool veel kord" type="password">  <?php echo $singupPasswordError; ?>
+		
+		<br><br>
+		
+		<input name="singupEmail" placeholder="E-post" type="email">  <?php echo $singupEmailError; ?>
+		
+		<br><br>
+		
+		<input name="Nimi" placeholder="Nimi" type="Nimi">  <?php echo $singupPasswordError; ?>
+		
+		<br><br>
+		
+		<input name="Perekonnanimi" placeholder="Perekonnanimi" type="Perekonnanimi">  <?php echo $singupPasswordError; ?>
 		
 		<br><br>
 		
