@@ -100,3 +100,5 @@
 	</body>
 </html>
 
+## Tahaksin teha reklaami veebilehekükg, kus oleksid bannerid, ja nendes oleks informatsiion kui avada neid.
+
