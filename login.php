@@ -1,4 +1,5 @@
-<?php
+<?php 
+
 
 	//var_dump($_GET);
 	
@@ -6,38 +7,107 @@
 	
 	//var_dump($_POST);
 	
-		$singupEmailError = "*";
-
+	//MUTUJAD
+	$signupEmailError = "*";
+	$signupEmail = "";
+	
 	//kas keegi vajutas nuppu ja see on olemas
 	
-	if (isset($_POST["singupEmail"])) {
+	if (isset ($_POST["signupEmail"])) {
 		
-		//on oleam
+		//on olemas
 		// kas epost on tühi
-		if (empty($_POST["sinupEmail"])) {
-			// on tühi
+		if (empty ($_POST["signupEmail"])) {
 			
-			$singupEmailError = "*Väli on kosustuslik";
+			// on tühi
+			$signupEmailError = "* Väli on kohustuslik!";
+			
+		} else {
+			//email on olemas õige
+			$signupEmail = $_POST["signupEmail"];
 		}
+		
 	}
 	
-	//////////////////////////////////////////////////////
+	$signupPasswordError = "*";
 	
-			$singupPasswordError = "*";
-
-	if (isset($_POST["singupPassword"])) {
-	
-		if (empty($_POST["sinupPassword"])) {
-
-			$singupPasswordError = "*Väli on kosustuslik";
+	if (isset ($_POST["signupPassword"])) {
+		
+		if (empty ($_POST["signupPassword"])) {
+			
+			$signupPasswordError = "* Väli on kohustuslik!";
+			
 		} else {
+			
 			// parool ei olnud tühi
-			if ( strlen($_POST["singupPassword"]) < 8 )  {
+			
+			if ( strlen($_POST["signupPassword"]) < 8 ) {
 				
-				$singupPasswordError = "* Parool peab olema vähemalt 8 tähemärkki pikk!";
+				$signupPasswordError = "* Parool peab olema vähemalt 8 tähemärkki pikk!";
+				
+			}
+			
+		}
+		
+	}
+	
+	//vaikimisi väärtus
+	$gender = "";
+	
+	if (isset ($_POST["gender"])) {
+		if (empty ($_POST["gender"])) {
+			$genderError = "* Väli on kohustuslik!";
+		} else {
+			$gender = $_POST["gender"];
+		}
+		
+	} 
+	
+	
+	
+	
+		if ($signupEmailError == "*" AND 
+		 $signupPasswordError == "*" &&
+		 isset($_POST["signupEmail"])&&
+		 isset($_POST["signupPassword"])
+			
+			) 
+			{
+		
+		//vigu ei olnud, k]ik on olemas
+		echo "Salvestan...<br>";
+		echo "email ".$signupEmail. "<br>";
+		echo "parool  ".$_POST["signupPassword"]."<br>";
+		
+		$password = hash("sha512", $_POST["signupPassword"]);
+		
+		echo $password;
+		
+		//loon ühenduse
+		
+		$database = "if16_kirikotk_4";
+		$mysqli = new mysqli($serverHost, $serverUsername, $serverPassword, $database);
+		
+		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password) VALUE (?, ?)");
+		
+		echo $mysqli->error;
+		
+		//asendan küsimärgig
+		//iga märgi kohta tuleb lisada üks täht - mis tüüpi muutuja on
+		// s - string
+		// i - int
+		// d - double
+		$stmt->bind_param("ss", $signupEmail, $password);
+		
+		//täida käsku
+		if($stmt->execute() ) {
+			echo "õnnestus";
+			} else {
+				echo "ERROR ".$stmt->error;
 			}
 		}
-	}
+		
+		
 	
 ?>
 
@@ -46,59 +116,86 @@
 	<head>
 		<title>Sisselogimise leht</title>
 	</head>
+	<center>
+			<style>	
+		body {
+			background-image:	url("http://www.astro.spbu.ru/staff/afk/Teaching/Seminars/XimFak/bg/Fon5.gif");
+			background-repeat: repeat;
+			background-position: center top;
+			background-attachment: fixed;
+			}
+		
+		
+		</style>
 	<body>
 
-	<h1>Logi sesse</h1>
-	
-	<form method="POST" >
-	    <label>E-post</label><br>
-		<input name="loginEmail" type="email">
+		<h1>Logi sisse</h1>
 		
+		<form method="POST" >
+			
+			<input name="loginEmail" placeholder="E-post" type="email">
+			
+			<br><br>
+
+			<input name="loginPassword" placeholder="Parool" type="password">
+			
+			<br><br>
+			
+			<input type="submit" value="Logi sisse">
+		
+		</form>
+		
+		<h1>Loo kasutaja</h1>
+		
+		<form method="POST" >
+			
+			<label>E-post</label><br>
+			<input name="signupEmail" type="email" value="<?=$signupEmail;?>"> <?php echo $signupEmailError; ?>
+			
+			<br><br>
+            
+			<label>Parool</label><br>
+			<input name="signupPassword" type="password"> <?php echo $signupPasswordError; ?>
+			
+			<br><br>
+
+			<?php if ($gender == "female") { ?>
+				<input type="radio" name="gender" value="female" checked> female<br>
+			<?php } else { ?>
+				<input type="radio" name="gender" value="female" > female<br>
+			<?php } ?>
+			
+			<?php if ($gender == "male") { ?>
+				<input type="radio" name="gender" value="male" checked> male<br>
+			<?php } else { ?>
+				<input type="radio" name="gender" value="male" > male<br>
+			<?php } ?>
+			
+			
+			<?php if ($gender == "other") { ?>
+				<input type="radio" name="gender" value="other" checked> other<br>
+			<?php } else { ?>
+				<input type="radio" name="gender" value="other" > other<br>
+			<?php } ?>
+
+			<br>
+			
+			Sünnipäev:<br>
+		<input type="date" name="sünnipäev" max="2006-12-31">
 		<br><br>
+			
+			<input type="submit" value="Loo kasutaja">
+			
+			
 		
-		<label>Parool</label><br>
-		<input name="loginPassword" type="password">
+		</form>
 		
-		<br><br>
-		
-		<input type="submit" value="Logi sisse">
-		
-	</form>
-	
-	
-	<h1>Loo kasutaja</h1>
-	
-	<form method="POST" >
-		<input name="singupName" placeholder="Login" type="name">  <?php echo $singupEmailError; ?>
-		
-		<br><br>
-		
-		<input name="singupPassword" placeholder="Parool" type="password">  <?php echo $singupPasswordError; ?>
-		
-		<br><br>
-		
-		<input name="singupPassword" placeholder="Parool veel kord" type="password">  <?php echo $singupPasswordError; ?>
-		
-		<br><br>
-		
-		<input name="singupEmail" placeholder="E-post" type="email">  <?php echo $singupEmailError; ?>
-		
-		<br><br>
-		
-		<input name="Nimi" placeholder="Nimi" type="Nimi">  <?php echo $singupPasswordError; ?>
-		
-		<br><br>
-		
-		<input name="Perekonnanimi" placeholder="Perekonnanimi" type="Perekonnanimi">  <?php echo $singupPasswordError; ?>
-		
-		<br><br>
-		
-		<input type="submit" value="Loo kasutaja">
-		
-	</form>
-		
+
 	</body>
 </html>
 
+
+<br><br>
 ## Tahaksin teha reklaami veebilehekükg, kus oleksid bannerid, ja nendes oleks informatsiion kui avada neid.
+</center>
 
